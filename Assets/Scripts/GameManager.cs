@@ -8,15 +8,18 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public Text distext;
+    public Text distext2;
     public Text fpstext;
     [SerializeField]
     GameObject canvas;
     [SerializeField]
     GameObject timeline;
     bool debagactive = false;
+    public GameObject[] obj;
 
     private float disatance;
     private string data;
+    private float distance2;
     private SerialPort serialPort;
 
     // Start is called before the first frame update
@@ -36,11 +39,24 @@ public class GameManager : MonoBehaviour
         if (serialPort.IsOpen)
         {
             data = serialPort.ReadLine();
-            disatance = float.Parse(data);
-            distext.text = (data + "cm");
+            string[] i;
+            i = data.Split(',');
+            disatance = float.Parse(i[0]);
+            distance2 = float.Parse(i[1]);
+            distext.text = (i[0].ToString() + "cm");
+            distext2.text = (i[1].ToString() + "cm");
             if (disatance < 10)
             {
                 timeline.SetActive(true);
+            }
+
+            if (distance2 < 10)
+            {
+                timeline.SetActive(false);
+                for (int x = 0; x < obj.Length; x++)
+                {
+                    obj[x].SetActive(false);
+                }
             }
         }
 
